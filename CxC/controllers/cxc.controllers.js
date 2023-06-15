@@ -1,33 +1,33 @@
 const {db} = require('../cnn')
 
 const getCxC = async (req, res) => {
-    const response = await db.any('SELECT * FROM CUENTASBANCARIAS')
+    const response = await db.any('SELECT * FROM cuentasBancarias')
     res.json(response)
 }
 
 const insertCxC = async (req, res) => {
-    const {codigo, nombrecuentabancaria, entidadbancaria, descripcion, estado} = req.query
-    const response = await db.any('INSERT into CUENTASBANCARIAS(codigo, nombrecuentabancaria, entidadbancaria, descripcion, estado) values($1, $2, $3, $4, $5);', [codigo, nombrecuentabancaria, entidadbancaria, descripcion, estado])
+    const {idCB, nombreCB, entidadCB, descripcionCB, estadoCB} = req.query
+    const response = await db.any('INSERT into cuentasBancarias(idCB, nombreCB, entidadCB, descripcionCB, estadoCB) values($1, $2, $3, $4, $5);', [idCB, nombreCB, entidadCB, descripcionCB, estadoCB])
     res.json ({
         message: "Cuenta por Cobrar Ingresada",
         body:{
-            CUENTASBANCARIAS:{codigo, nombrecuentabancaria, entidadbancaria, descripcion, estado}
+          cuentasBancarias:{idCB, nombreCB, entidadCB, descripcionCB, estadoCB}
         }
     })
 }
 
 const updateCxC = async (req, res) => {
-    const { codigo, nombrecuentabancaria, entidadbancaria, descripcion, estado } = req.query;
+    const { idCB, nombreCB, entidadCB, descripcionCB, estadoCB } = req.query;
   
     try {
       const query = `
-        UPDATE CUENTASBANCARIAS
-        SET nombrecuentabancaria = $1, entidadbancaria = $2, descripcion = $3, estado = $4
-        WHERE codigo = $5
-        RETURNING codigo, nombrecuentabancaria, entidadbancaria, descripcion, estado
+        UPDATE cuentasBancarias
+        SET nombreCB = $1, entidadCB = $2, descripcionCB = $3, estadoCB = $4
+        WHERE idCB = $5
+        RETURNING idCB, nombreCB, entidadCB, descripcionCB, estadoCB
       `;
   
-      const result = await db.one(query, [nombrecuentabancaria, entidadbancaria, descripcion, estado, codigo]);
+      const result = await db.one(query, [nombreCB, entidadCB, descripcionCB, estadoCB, idCB]);
   
       res.json({
         message: "Cuenta por Cobrar actualizada",
@@ -42,14 +42,14 @@ const updateCxC = async (req, res) => {
   };
   
   const deleteCxC = async (req, res) => {
-    const { codigo } = req.query;
+    const { idCB } = req.query;
     try {
-        const response = await db.query('DELETE FROM CUENTASBANCARIAS WHERE codigo = $1', [codigo]);
+        const response = await db.query('DELETE FROM cuentasBancarias WHERE idCB = $1', [idCB]);
         res.json({
             message: "Cuenta por Cobrar eliminada",
             body: {
                 Cuenta: {
-                    codigo
+                  idCB
                 }
             }
         });
